@@ -35,7 +35,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('description', models.TextField()),
                 ('base_price', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('image_url', models.URLField(blank=True)),
             ],
         ),
         migrations.CreateModel(
