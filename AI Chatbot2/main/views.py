@@ -4,6 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Pizza, Size, Beverage, Customer, ChatMessage
 import json
 import requests
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 def index(request):
     pizzas = Pizza.objects.all()
@@ -22,13 +27,9 @@ def chat(request):
         try:
             data = json.loads(request.body)
             user_message = data.get('message', '').lower()
-            customer_id = data.get('customer_id')
-
-            # Get or create customer
-            if customer_id:
-                customer = Customer.objects.get(id=customer_id)
-            else:
-                customer = Customer.objects.create()
+            
+            # Get or create customer using session
+            customer = Customer.get_from_session(request.session)
 
             # Save user message
             ChatMessage.objects.create(
@@ -47,24 +48,20 @@ def chat(request):
             beverages = list(Beverage.objects.values('name', 'price'))
 
             # Create context for the AI prompt
-            menu_context = {
-                'pizzas': pizzas,
-                'sizes': sizes,
-                'beverages': beverages
-            }
+            menu_context = menu_items
 
             # Ollama API call with enhanced prompt
             system_prompt = f"""
             You are Maro AI, a friendly cashier at Maro's Pizza. Here's our menu:
 
             Pizzas:
-            {', '.join([f"{p['name']} (${p['base_price']})" for p in pizzas])}
+            {', '.join([f"{p['name']} (${p['base_price']})" for p in menu_items['pizzas']])}
 
             Sizes:
-            {', '.join([f"{s['name']} (x{s['price_multiplier']})" for s in sizes])}
+            {', '.join([f"{s['name']} (x{s['price_multiplier']})" for s in menu_items['sizes']])}
 
             Beverages:
-            {', '.join([f"{b['name']} (${b['price']})" for b in beverages])}
+            {', '.join([f"{b['name']} (${b['price']})" for b in menu_items['beverages']])}
 
             Previous conversation:
             {conversation_history}
@@ -101,7 +98,7 @@ def chat(request):
                 return JsonResponse({
                     'response': bot_response,
                     'menu_items': menu_context,
-                    'customer_id': customer.id
+                    'customer_id': customer.customer_id
                 })
             else:
                 return JsonResponse({'response': 'Sorry, I encountered an error.'}, status=500)

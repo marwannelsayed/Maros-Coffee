@@ -1,20 +1,17 @@
 from django.contrib import admin
-from .models import Pizza, Size, Beverage, Order
-
-@admin.register(Pizza)
-class PizzaAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price')
-    search_fields = ('name',)
-
-@admin.register(Size)
-class SizeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price_multiplier')
-
-@admin.register(Beverage)
-class BeverageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price')
+from .models import Order, Customer, ChatMessage
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('pizza', 'size', 'beverage', 'total_price', 'created_at')
+    list_display = ('id', 'total_price', 'created_at')
     list_filter = ('created_at',)
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('customer_id', 'session_key', 'created_at')
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('customer', 'content', 'is_bot', 'timestamp')
+    list_filter = ('is_bot', 'timestamp')
+    search_fields = ('content',)

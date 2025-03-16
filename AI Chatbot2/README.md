@@ -55,10 +55,52 @@ python manage.py runserver
 ## Project Structure
 
 - `main/` - Main application directory
-  - `models.py` - Database models (Pizza, Size, Beverage, Order, etc.)
+  - `models.py` - Database models (Order, Customer, ChatMessage)
   - `views.py` - View functions and API endpoints
   - `templates/` - HTML templates
   - `urls.py` - URL configurations
+  - `kegeldb_service.py` - Service for interacting with Kegeldb API
+
+## Setup Instructions
+
+1. Clone the repository
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Configure environment variables:
+   - Create a `.env` file in the project root
+   - Add your Kegeldb API key:
+     ```
+     KEGELDB_API_KEY=your_kegeldb_api_key_here
+     ```
+4. Run migrations:
+   ```
+   python manage.py migrate
+   ```
+5. Start the development server:
+   ```
+   python manage.py runserver
+   ```
+
+## Kegeldb API Integration
+
+The application uses the Kegeldb API to fetch menu data (pizzas, sizes, and beverages). The integration is handled by the `KegeldbService` class in `kegeldb_service.py`. The service includes caching to improve performance and reduce API calls.
+
+### API Endpoints Used
+
+- `/pizzas` - Get all available pizzas
+- `/sizes` - Get all available pizza sizes
+- `/beverages` - Get all available beverages
+
+## Technologies Used
+
+- Django
+- Python
+- JavaScript
+- HTML/CSS
+- Kegeldb API
+- Ollama API (for AI chatbot)
 
 ## Features
 
@@ -67,6 +109,7 @@ python manage.py runserver
 - Real-time chat interface
 - Dynamic pricing based on pizza size
 - Order management system
+- Integration with Kegeldb API for menu data
 
 ## Note
 

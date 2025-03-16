@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-_ipya2^*xa0ig9lad#^0*y1g_4_u6to3e*abrmw%@ek^&7)0l(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "192.168.1.80",  # Your Mac's local IP address
+]
 
 
 # Application definition
@@ -122,3 +126,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Session settings
+# https://docs.djangoproject.com/en/5.1/topics/http/sessions/
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Store sessions in the database
+SESSION_COOKIE_AGE = 1209600  # Session expiry time in seconds (2 weeks)
