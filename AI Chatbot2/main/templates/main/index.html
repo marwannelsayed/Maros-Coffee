@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maro's Pizza</title>
+    <title>Maro's Coffee</title>
     <style>
         body {
             margin: 0;
@@ -11,7 +11,7 @@
             background-color: #f5f5f5;
         }
         .header {
-            background-color: #d32f2f;
+            background-color: #493628;
             color: white;
             padding: 2rem;
             text-align: center;
@@ -39,7 +39,7 @@
         }
         .menu-item h3 {
             margin: 10px 0;
-            color: #d32f2f;
+            color: #493628;
         }
         .price {
             font-weight: bold;
@@ -51,7 +51,7 @@
             right: 20px;
             width: 60px;
             height: 60px;
-            background-color: #d32f2f;
+            background-color: #493628;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -77,7 +77,7 @@
             z-index: 1000;
         }
         .chat-header {
-            background: #d32f2f;
+            background: #493628;
             color: white;
             padding: 15px;
             border-radius: 10px 10px 0 0;
@@ -102,7 +102,7 @@
         }
         .send-button {
             padding: 10px 20px;
-            background-color: #d32f2f;
+            background-color: #493628;
             color: white;
             border: none;
             border-radius: 5px;
@@ -126,8 +126,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>Maro's Pizza</h1>
-        <p>The Best Pizza in Town!</p>
+        <h1>Maro's Coffee</h1>
+        <p>The Best Coffee in Town!</p>
     </div>
 
     <div class="menu-container" id="menu-container">
@@ -156,7 +156,7 @@
             
             // Show welcome message when chat is opened
             if (chatWindow.style.display === 'block') {
-                const welcomeMessage = "Hi there! Welcome to Maro's Pizza! I'm Maro AI, your cashier today. How can I assist you?";
+                const welcomeMessage = "Hi there! Welcome to Maro's Coffee! I'm Maro AI, your cashier today. How can I assist you?";
                 const chatBox = document.getElementById('chat-box');
                 if (!chatBox.hasChildNodes()) {
                     const messageDiv = document.createElement('div');

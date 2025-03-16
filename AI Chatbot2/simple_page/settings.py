@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'simple_page.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/Users/marwannelsayed/Desktop/M/Maros-Pizza/AI Chatbot2/db.sqlite3',  # Update this path
     }
 }
 

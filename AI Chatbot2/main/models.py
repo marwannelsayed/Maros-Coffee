@@ -1,22 +1,15 @@
 from django.db import models
 
-class Order(models.Model):
-    # Store pizza, size, and beverage as JSON data instead of foreign keys
-    pizza_data = models.JSONField()
-    size_data = models.JSONField()
-    beverage_data = models.JSONField(null=True, blank=True)
-    total_price = models.DecimalField(max_digits=6, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:  # Only for new instances
-            last_order = Order.objects.order_by('-id').first()
-            self.id = 1 if not last_order else last_order.id + 1
-        # Calculate total price
-        self.total_price = float(self.pizza_data.get('base_price', 0)) * float(self.size_data.get('price_multiplier', 1.0))
-        if self.beverage_data:
-            self.total_price += float(self.beverage_data.get('price', 0))
-        super().save(*args, **kwargs)
+class DrinkType(models.Model):
+    drink_type = models.CharField(max_length=100)
+    price_small = models.DecimalField(max_digits=5, decimal_places=2)
+    price_medium = models.DecimalField(max_digits=5, decimal_places=2)
+    price_large = models.DecimalField(max_digits=5, decimal_places=2)
+    simple = models.DecimalField(max_digits=5, decimal_places=2)
+    double = models.DecimalField(max_digits=5, decimal_places=2)
+    
+    def __str__(self):
+        return self.drink_type
 
 class Customer(models.Model):
     session_key = models.CharField(max_length=40, primary_key=True)

@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Order, Customer, ChatMessage
+from .models import DrinkType, Customer, ChatMessage
 
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'total_price', 'created_at')
-    list_filter = ('created_at',)
+@admin.register(DrinkType)
+class DrinkTypeAdmin(admin.ModelAdmin):
+    list_display = ('drink_type', 'price_small', 'price_medium', 'price_large', 'simple', 'double')
+    search_fields = ('drink_type',)
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
