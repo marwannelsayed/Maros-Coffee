@@ -1,4 +1,4 @@
-from django.db import models
+from djongo import models
 
 class DrinkType(models.Model):
     drink_type = models.CharField(max_length=100)
@@ -38,6 +38,7 @@ class ChatMessage(models.Model):
     content = models.TextField()
     is_bot = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    token_count = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['timestamp']

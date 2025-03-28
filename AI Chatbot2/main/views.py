@@ -1,14 +1,21 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import models
+from django.db.models import Sum
 from .models import DrinkType, Customer, ChatMessage
 import json
-import requests
 import os
 from dotenv import load_dotenv
+import tiktoken
+import google.generativeai as genai
 
 # Load environment variables
 load_dotenv()
+
+# Configure Gemini API
+genai.configure(api_key='AIzaSyChlpXw1ueiMB4119F0ONzFlglFWB5w0hQ')
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 def index(request):
     drinks = DrinkType.objects.all()
@@ -27,11 +34,16 @@ def chat(request):
             # Get or create customer using session
             customer = Customer.get_from_session(request.session)
 
-            # Save user message
+            # Count tokens in user message
+            encoding = tiktoken.get_encoding("cl100k_base")
+            user_tokens = len(encoding.encode(user_message))
+            
+            # Save user message with token count
             ChatMessage.objects.create(
                 customer=customer,
                 content=user_message,
-                is_bot=False
+                is_bot=False,
+                token_count=user_tokens
             )
 
             # Get chat history
@@ -83,25 +95,39 @@ def chat(request):
             5. Show final price only after order confirmation
             """
 
-            response = requests.post('http://localhost:11434/api/generate', 
-                json={
-                    "model": "llama3.2",
-                    "prompt": f"{system_prompt}\nCustomer: {user_message}",
-                    "stream": False
-                })
+                        # Generate response using Gemini
+            response = model.generate_content(
+                contents=system_prompt + "\nCustomer: " + user_message,
+                generation_config={
+                    "temperature": 0.7,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 1024
+                }
+            )
             
-            if response.status_code == 200:
-                bot_response = response.json().get('response', '')
-                # Save bot response
-                ChatMessage.objects.create(
+            if response.text:
+                bot_response = response.text
+                # Count tokens in bot response
+                bot_tokens = len(encoding.encode(bot_response))
+                
+                # Save bot response with token count
+                chat_message = ChatMessage.objects.create(
                     customer=customer,
                     content=bot_response,
-                    is_bot=True
+                    is_bot=True,
+                    token_count=bot_tokens
                 )
+                
+                # Calculate total tokens for this conversation
+                total_tokens = ChatMessage.objects.filter(customer=customer).aggregate(total=models.Sum('token_count'))['total']
+                
                 return JsonResponse({
                     'response': bot_response,
                     'menu_items': menu_context,
-                    'customer_id': customer.customer_id
+                    'customer_id': customer.customer_id,
+                    'message_tokens': bot_tokens,
+                    'total_tokens': total_tokens
                 })
             else:
                 return JsonResponse({'response': 'Sorry, I encountered an error.'}, status=500)

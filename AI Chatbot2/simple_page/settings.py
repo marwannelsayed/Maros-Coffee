@@ -80,8 +80,13 @@ WSGI_APPLICATION = 'simple_page.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/marwannelsayed/Desktop/M/Maros-Pizza/AI Chatbot2/db.sqlite3',  # Update this path
+        'ENGINE': 'djongo',
+        'NAME': 'maros_pizza_db',
+        'ENFORCE_SCHEMA': True,
+        'CLIENT': {
+            'host': 'localhost',
+            'port': 27017,
+        }
     }
 }
 
